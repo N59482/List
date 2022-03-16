@@ -3,11 +3,11 @@
 using namespace std;
 
 template<typename T>
-class OS
+class List
 	{
 		public:
-		OS();
-		~OS();
+		List();
+		~List();
 		T& operator [] (const int index);
 		void push_back(T data);
 		void push_front(T data);
@@ -16,7 +16,6 @@ class OS
 		void insert(T value, int index);
 		void removeAt(int index);
 		void clear();
-		//void randOS(int ossize); нет мне лень
 		int getSize(){return Size;}
 		
 		private:
@@ -35,75 +34,61 @@ class OS
 		};
 		
 		element<T> *head;
-		 int Size;	
+		int Size;	
 	};
 
 template<typename T>
-OS<T>::OS()
+List<T>::List()
 	{
 		Size=0;
 		head = nullptr;
 	};
 
 template<typename T>
-OS<T>::~OS()
+List<T>::~List()
 	{
 		clear();
 	};
 
 template<typename T>
-void OS<T>::push_back(T data)
+void List<T>::push_back(T data)
 	{
-		if (head==nullptr)// Если список пуст
+		element<T> *temp = head;//element<T> *temp = this->head;
+		while(temp->pNext) //while(temp->pNext != nullptr)
 		{
-			head = new element<T>(data);
-			Size=1;
-		}
-		else 
-		{
-			element<T> *temp = this->head;
-			while(temp->pNext != nullptr)
-			{
-				temp = temp->pNext;
-			}; 
-			
-			temp->pNext = new element<T>(data);
-			Size++;
-		};
+			temp = temp->pNext;
+		}; 
+		temp->pNext = new element<T>(data);
+		Size++;
 	};
 
 template<typename T>
-void OS<T>::push_front(T data)
+void List<T>::push_front(T data)
 	{
 	    head = new element<T> (data, head);
 	    Size++;
 	};
 
-template<typename T>
-T& OS<T>::operator [] (const int index)
+template<typename T> // протестировать!
+T& List<T>::operator [] (const int index)
 	{
-	  element<T> *temp = this->head;
-	  if(index<=Size)
-	  {
-	      for(int i=0; temp!=nullptr; i++)
-	   {
-	      if (i == index)
-	      {
-	          return temp->data;
-	      }
-	      else temp = temp->pNext;
-	   }; 
-	  } else cout<<"Индекс за границами массва\n";
+		if(index > Size) return nullptr; // бросать тут исключение  
+		for(int i = 0; !temp; ++i)
+			{
+				if (i==index) return temp->data;
+				temp = temp->pNext;
+			};
+		return nullptr; // бросать тут исключение  
 	};
 
 template<typename T>
-void OS<T>::pop_back()
+void List<T>::pop_back()
 	{
 	    removeAt(Size-1);
 	};
 
 template<typename T>
-void OS<T>::pop_front()
+void List<T>::pop_front()
 	{
 		    element<T> *temp = head; 
 		    head = temp->pNext;
@@ -112,7 +97,7 @@ void OS<T>::pop_front()
 	};
 	
 template<typename T>
-void OS<T>::clear()
+void List<T>::clear()
 	{
 	    while(Size)
 	    {
@@ -121,7 +106,7 @@ void OS<T>::clear()
 	};
 	
 template<typename T>
-void OS<T>::insert(T value,int index)
+void List<T>::insert(T value,int index)
 	{
 	    if (index == getSize()) push_back(value); //если индекс на 1 больше списка то вставить в конец; 
 	    else if (index == 0) push_front(value);
@@ -139,7 +124,7 @@ void OS<T>::insert(T value,int index)
 	};
 
 template<typename T> 
-void OS<T>::removeAt(int index)//5
+void List<T>::removeAt(int index)//5
 	{
 	    if (index == 0) pop_front();
 	    else if (index >= getSize()) cout<<"Выход за границы массива\n";
@@ -160,14 +145,13 @@ void OS<T>::removeAt(int index)//5
 	    };
 	};
 
-void line()
+void printline()
 	{
 	    cout<<"---------------------------------------------------------------------------------------\n";
 	};
 
-
 template<typename T>
-void Status(OS<T> & tos)
+void Status(List<T> & tos)
 	{
 	    cout<<"Теперь в списке "<<tos.getSize() <<(((tos.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
 
@@ -177,65 +161,63 @@ void Status(OS<T> & tos)
 		};
 	};
 
-int main()////////////////////////???????????????????????cv
+int main()
 	{
 	    int vote_index;
 	    
-		OS<int> os; //Создаем список
+		List<int> list; //Создаем список
 		
-		os.push_back(0); // заполняем;
-		os.push_back(11);
-		os.push_back(22);
-		os.push_back(33);
+		list.push_back(0); // заполняем;
+		list.push_back(11);
+		list.push_back(22);
+		list.push_back(33);
 		
-		line();
+		printline();
+		Status(list);
+	 //    cout<<"В списке "<<list.getSize() <<(((list.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
 
-	    cout<<"В списке "<<os.getSize() <<(((os.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
-
-		for(int i=0;i<os.getSize();i++) // выводим список
-		{
-		    cout<<os[i]<<((i==(os.getSize()-1))?".\n":"->");
-		};
+		// for(int i=0;i<list.getSize();i++) // выводим список
+		// {
+		//     cout<<list[i]<<((i==(list.getSize()-1))?".\n":"->");
+		// };
 		
-		line();
+		printline();
 		
 		cout<<"Вставим в конец число " << 44 << endl;
-		os.push_back(44);
+		list.push_back(44);
 		
-		Status(os);
-		line();
+		// Status(list);
+		// printline();
 		
-		cout<<"Вставим в начало число "<< -11 <<endl;
-		os.push_front(-11);
+		// cout<<"Вставим в начало число "<< -11 <<endl;
+		// list.push_front(-11);
 		
-		Status(os);
-		line();
+		// Status(list);
+		// printline();
 		
-		cout<<"Удалим последний элемент"<<endl;
-		os.pop_back();
+		// cout<<"Удалим последний элемент"<<endl;
+		// list.pop_back();
 		
-		Status(os);
-		line();
+		// Status(list);
+		// printline();
 		
-		cout<<"Теперь удалим первый элемент"<<endl;
-		os.pop_front();
+		// cout<<"Теперь удалим первый элемент"<<endl;
+		// list.pop_front();
 		
-		Status(os);
-		line();
+		// Status(list);
+		// printline();
 		
-		cout<<"Вставим число 20 на 2-е место списка"<<endl;
-		os.insert(20,2);
+		// cout<<"Вставим число 20 на 2-е место списка"<<endl;
+		// list.insert(20,2);
 		
-		Status(os);
-		line();
+		// Status(list);
+		// printline();
 		
-		cout<<"Удалим из списка 1-й элемент\n";
-		os.removeAt(1);
+		// cout<<"Удалим из списка 1-й элемент\n";
+		// list.removeAt(1);
 		
-		Status(os);
-		line();
-		
-		cout<<"THE END\n";
+		// Status(list);
+		// printline();
 		
 		return 0;
 	}
