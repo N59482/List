@@ -1,5 +1,4 @@
 #include <iostream>
-#include <exception>
 
 using namespace std;
 
@@ -17,14 +16,14 @@ class List
 		void insert(T value, int index);
 		void removeAt(int index);
 		void clear();
-		int getSize(){return Size;} 
+		int getSize(){return Size;}
 		struct OoR : exception
 		{
 		   const char* what() const noexcept {return "Out of range!\n";}
 		};
-		struct missing : exception //протестить
+		struct missing : exception
 		{
-		   const char* what() const noexcept {return "the value is missing!\n";}
+		   const char* what() const noexcept {return "the value is missing\n";}
 		};
 
 		private:
@@ -49,24 +48,23 @@ class List
 template<typename T>
 List<T>::List()
 	{
-		Size=0;
-		head = nullptr;
+		Size = 0;
+		head->pNext = nullptr;
 	};
 
 template<typename T>
 List<T>::~List()
 	{
 		clear();
+		delete head;
 	};
 
 template<typename T>
 void List<T>::push_back(T data)
 	{
 		element<T> *temp = head;//element<T> *temp = this->head;
-		while(temp->pNext) //while(temp->pNext != nullptr)
-		{
-			temp = temp->pNext;
-		}; 
+		while(temp->pNext != nullptr)
+		    temp = temp->pNext;
 		temp->pNext = new element<T>(data);
 		Size++;
 	};
@@ -81,14 +79,14 @@ void List<T>::push_front(T data)
 template<typename T> // протестировать!
 T& List<T>::operator [] (const int index)
 	{
-		if(index > Size) throw OoR(); 
+		if(index >= Size) throw OoR(); 
 		element<T> *temp = head->pNext;
-		for(int i = 0; !(temp); ++i)
+		for(int i = 0; i < Size; i++)
 			{
-				if (i==index) return temp->data;
+				if (i==index) {cout<<i<<" == "<<index<<"!!! "; return temp->data;}; // munmap_chunk(): invalid pointer говорит
 				temp = temp->pNext;
 			};
-		throw missing();
+		throw OoR(); 
 	};
 
 template<typename T>
@@ -100,8 +98,8 @@ void List<T>::pop_back()
 template<typename T>
 void List<T>::pop_front()
 	{
-		    element<T> *temp = head; 
-		    head = temp->pNext;
+		    element<T> *temp = head->pNext; 
+		    head->pNext = temp->pNext;
 		    delete temp;
 		    Size--;
 	};
@@ -173,65 +171,9 @@ void Status(List<T> & tos)
 
 int main()
 	{
-	    int vote_index;
-	    
-		List<int> list; //Создаем список
-		list.push_back(0); // заполняем;
-		list.push_back(11);
-		list.push_back(22);
-		list.push_back(33);
-		Status(list);
-	    cout<<"В списке "<<list.getSize() <<(((list.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
-
-		for(int i=0;i<list.getSize();i++) // выводим список
-		{
-		    cout<<list[i]<<((i==(list.getSize()-1))?".\n":"->");
-		};
-		
-		cout<<"Вставим в конец число " << 44 << endl;
-		list.push_back(44);
-
-		try // это работает
-		{
-			cout<<list[40]<<endl;
-		}
-		catch(const std::exception & ex)
-		{
-			cout<<ex.what();
-		};
-		
-		Status(list);
+		List<int> list; 
 		printline();
-		
-		cout<<"Вставим в начало число "<< -11 <<endl;
-		list.push_front(-11);
-		
-		Status(list);
-		printline();
-		
-		cout<<"Удалим последний элемент"<<endl;
-		list.pop_back();
-		
-		Status(list);
-		printline();
-		
-		cout<<"Теперь удалим первый элемент"<<endl;
-		list.pop_front();
-		
-		Status(list);
-		printline();
-		
-		cout<<"Вставим число 20 на 2-е место списка"<<endl;
-		list.insert(20,2);
-		
-		Status(list);
-		printline();
-		
-		cout<<"Удалим из списка 1-й элемент\n";
-		list.removeAt(1);
-		
-		Status(list);
-		printline();
-		
+		list.push_back(400);
+		try {cout<<list[0];} catch(const exception & ex) {cout<<ex.what();};
 		return 0;
 	}
