@@ -1,4 +1,5 @@
 #include <iostream>
+#include <exception>
 
 using namespace std;
 
@@ -16,8 +17,16 @@ class List
 		void insert(T value, int index);
 		void removeAt(int index);
 		void clear();
-		int getSize(){return Size;}
-		
+		int getSize(){return Size;} 
+		struct OoR : exception
+		{
+		   const char* what() const noexcept {return "Out of range!\n";}
+		};
+		struct missing : exception //протестить
+		{
+		   const char* what() const noexcept {return "the value is missing!\n";}
+		};
+
 		private:
 
 		template<typename T1>
@@ -72,13 +81,14 @@ void List<T>::push_front(T data)
 template<typename T> // протестировать!
 T& List<T>::operator [] (const int index)
 	{
-		if(index > Size) return nullptr; // бросать тут исключение  
-		for(int i = 0; !temp; ++i)
+		if(index > Size) throw OoR(); 
+		element<T> *temp = head->pNext;
+		for(int i = 0; !(temp); ++i)
 			{
 				if (i==index) return temp->data;
 				temp = temp->pNext;
 			};
-		return nullptr; // бросать тут исключение  
+		throw missing();
 	};
 
 template<typename T>
@@ -114,7 +124,7 @@ void List<T>::insert(T value,int index)
 	    else   //вариант с правильной логикой; 
 	    {
 	        element<T> *temp = head;
-	        for(int i=0; i<(index-1); i++)//идем предшествующий элемент;
+	        for(int i=0; i<(index-1); i++)//ищем предшествующий элемент;
 	        {
 	            temp = temp->pNext;
 	        };
@@ -166,58 +176,62 @@ int main()
 	    int vote_index;
 	    
 		List<int> list; //Создаем список
-		
 		list.push_back(0); // заполняем;
 		list.push_back(11);
 		list.push_back(22);
 		list.push_back(33);
-		
-		printline();
 		Status(list);
-	 //    cout<<"В списке "<<list.getSize() <<(((list.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
+	    cout<<"В списке "<<list.getSize() <<(((list.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
 
-		// for(int i=0;i<list.getSize();i++) // выводим список
-		// {
-		//     cout<<list[i]<<((i==(list.getSize()-1))?".\n":"->");
-		// };
-		
-		printline();
+		for(int i=0;i<list.getSize();i++) // выводим список
+		{
+		    cout<<list[i]<<((i==(list.getSize()-1))?".\n":"->");
+		};
 		
 		cout<<"Вставим в конец число " << 44 << endl;
 		list.push_back(44);
+
+		try // это работает
+		{
+			cout<<list[40]<<endl;
+		}
+		catch(const std::exception & ex)
+		{
+			cout<<ex.what();
+		};
 		
-		// Status(list);
-		// printline();
+		Status(list);
+		printline();
 		
-		// cout<<"Вставим в начало число "<< -11 <<endl;
-		// list.push_front(-11);
+		cout<<"Вставим в начало число "<< -11 <<endl;
+		list.push_front(-11);
 		
-		// Status(list);
-		// printline();
+		Status(list);
+		printline();
 		
-		// cout<<"Удалим последний элемент"<<endl;
-		// list.pop_back();
+		cout<<"Удалим последний элемент"<<endl;
+		list.pop_back();
 		
-		// Status(list);
-		// printline();
+		Status(list);
+		printline();
 		
-		// cout<<"Теперь удалим первый элемент"<<endl;
-		// list.pop_front();
+		cout<<"Теперь удалим первый элемент"<<endl;
+		list.pop_front();
 		
-		// Status(list);
-		// printline();
+		Status(list);
+		printline();
 		
-		// cout<<"Вставим число 20 на 2-е место списка"<<endl;
-		// list.insert(20,2);
+		cout<<"Вставим число 20 на 2-е место списка"<<endl;
+		list.insert(20,2);
 		
-		// Status(list);
-		// printline();
+		Status(list);
+		printline();
 		
-		// cout<<"Удалим из списка 1-й элемент\n";
-		// list.removeAt(1);
+		cout<<"Удалим из списка 1-й элемент\n";
+		list.removeAt(1);
 		
-		// Status(list);
-		// printline();
+		Status(list);
+		printline();
 		
 		return 0;
 	}
