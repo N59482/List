@@ -16,6 +16,7 @@ class List
 		void insert(T value, int index);
 		void removeAt(int index);
 		void clear();
+		void show();
 		int getSize(){return Size;}
 		struct OoR : exception
 			{
@@ -50,29 +51,29 @@ List<T>::List()
 	{
 		cout<<"Constructor\n";
 		Size = 0;
-		head->pNext = nullptr;
+		head = new element<T>(0,nullptr);
 	};
 
 template<typename T>
-List<T>::~List()
+List<T>::~List() // разобраться как работет, не остаётся ли head
 	{
 		cout<<"Destructor\n";
 		clear();
 		// delete head; // ошибка munmap_chunk(): invalid pointer разобраться почему
 	};
 
-template<typename T>
+template<typename T> 
 void List<T>::push_back(T data)
 	{
 		cout<<"push_back\n";
-		element<T> *temp = head;//element<T> *temp = this->head;
+		element<T> *temp = head;//нужно ли писать this->head?
 		while(temp->pNext != nullptr)
 		    temp = temp->pNext;
 		temp->pNext = new element<T>(data);
 		Size++;
 	};
 
-template<typename T>// протестировать!
+template<typename T>
 void List<T>::push_front(T data)
 	{
 		cout<<"push_front\n";
@@ -105,10 +106,13 @@ template<typename T>
 void List<T>::pop_front()
 	{
 		cout<<"pop_front\n";
-		element<T> *temp = head->pNext; 
-		head->pNext = temp->pNext;
-		delete temp;
-		Size--;
+		if(head->pNext != nullptr)
+			{
+				element<T> *temp = head->pNext; 
+				head->pNext = temp->pNext;
+				delete temp;
+				Size--;
+			};
 	};
 	
 template<typename T>
@@ -163,6 +167,14 @@ void List<T>::removeAt(int index)//5
 	    };
 	};
 
+template<typename T> 
+void List<T>::show()
+	{   
+	    for(element<T> *temp = head;temp->pNext != nullptr;temp = temp->pNext)
+	        cout<<temp->pNext->data<<"->";
+	    cout<<endl;
+	};
+
 void printline()
 	{
 	    cout<<"---------------------------------------------------------------------------------------\n";
@@ -181,15 +193,12 @@ void Status(List<T> & tos)
 
 int main()
 	{
-		List<int> list; 
-		List<int> list2; 
-		printline();
-		list.push_back(400);
-		list2.push_front(400);
-		cout<<list[0]<<endl;
-		cout<<list2[0]<<endl;
-		
-
-
+		List<int> list;
+		list.push_back(1);
+		list.push_back(2);
+		list.push_back(3);
+		list.push_back(4);
+		list.push_back(5);
+		list.show();
 		return 0;
 	}
