@@ -18,13 +18,13 @@ class List
 		void clear();
 		int getSize(){return Size;}
 		struct OoR : exception
-		{
-		   const char* what() const noexcept {return "Out of range!\n";}
-		};
+			{
+			   const char* what() const noexcept {return "Out of range!\n";}
+			};
 		struct missing : exception
-		{
-		   const char* what() const noexcept {return "the value is missing\n";}
-		};
+			{
+			   const char* what() const noexcept {return "the value is missing\n";}
+			};
 
 		private:
 
@@ -48,6 +48,7 @@ class List
 template<typename T>
 List<T>::List()
 	{
+		cout<<"Constructor\n";
 		Size = 0;
 		head->pNext = nullptr;
 	};
@@ -55,13 +56,15 @@ List<T>::List()
 template<typename T>
 List<T>::~List()
 	{
+		cout<<"Destructor\n";
 		clear();
-		delete head;
+		// delete head; // ошибка munmap_chunk(): invalid pointer разобраться почему
 	};
 
 template<typename T>
 void List<T>::push_back(T data)
 	{
+		cout<<"push_back\n";
 		element<T> *temp = head;//element<T> *temp = this->head;
 		while(temp->pNext != nullptr)
 		    temp = temp->pNext;
@@ -69,21 +72,23 @@ void List<T>::push_back(T data)
 		Size++;
 	};
 
-template<typename T>
+template<typename T>// протестировать!
 void List<T>::push_front(T data)
 	{
-	    head = new element<T> (data, head);
+		cout<<"push_front\n";
+	    head->pNext = new element<T> (data, head->pNext);
 	    Size++;
 	};
 
 template<typename T> // протестировать!
 T& List<T>::operator [] (const int index)
 	{
+		cout<<"operator []\n";
 		if(index >= Size) throw OoR(); 
 		element<T> *temp = head->pNext;
 		for(int i = 0; i < Size; i++)
 			{
-				if (i==index) {cout<<i<<" == "<<index<<"!!! "; return temp->data;}; // munmap_chunk(): invalid pointer говорит
+				if (i==index) return temp->data; 
 				temp = temp->pNext;
 			};
 		throw OoR(); 
@@ -92,21 +97,24 @@ T& List<T>::operator [] (const int index)
 template<typename T>
 void List<T>::pop_back()
 	{
+		cout<<"pop_back\n";
 	    removeAt(Size-1);
 	};
 
 template<typename T>
 void List<T>::pop_front()
 	{
-		    element<T> *temp = head->pNext; 
-		    head->pNext = temp->pNext;
-		    delete temp;
-		    Size--;
+		cout<<"pop_front\n";
+		element<T> *temp = head->pNext; 
+		head->pNext = temp->pNext;
+		delete temp;
+		Size--;
 	};
 	
 template<typename T>
 void List<T>::clear()
 	{
+		cout<<"clear\n";
 	    while(Size)
 	    {
 	      pop_front();  
@@ -116,10 +124,11 @@ void List<T>::clear()
 template<typename T>
 void List<T>::insert(T value,int index)
 	{
-	    if (index == getSize()) push_back(value); //если индекс на 1 больше списка то вставить в конец; 
-	    else if (index == 0) push_front(value);
-	    else if (index > getSize()) cout<<"Индекс выходит далеко за рамки массива\n";
-	    else   //вариант с правильной логикой; 
+		cout<<"insert\n";
+	    if (index == getSize()) push_back(value); //уточнить насколько целесообразны дополнительные проверки экстремумов(делает ли это код эфективнее?)
+	    else if (index == 0) push_front(value); //уточнить насколько целесообразны дополнительные проверки экстремумов(делает ли это код эфективнее?)
+	    else if (index > getSize()) throw OoR();
+	    else
 	    {
 	        element<T> *temp = head;
 	        for(int i=0; i<(index-1); i++)//ищем предшествующий элемент;
@@ -134,6 +143,7 @@ void List<T>::insert(T value,int index)
 template<typename T> 
 void List<T>::removeAt(int index)//5
 	{
+		cout<<"removeAt\n";
 	    if (index == 0) pop_front();
 	    else if (index >= getSize()) cout<<"Выход за границы массива\n";
 	    else 
@@ -172,8 +182,14 @@ void Status(List<T> & tos)
 int main()
 	{
 		List<int> list; 
+		List<int> list2; 
 		printline();
 		list.push_back(400);
-		try {cout<<list[0];} catch(const exception & ex) {cout<<ex.what();};
+		list2.push_front(400);
+		cout<<list[0]<<endl;
+		cout<<list2[0]<<endl;
+		
+
+
 		return 0;
 	}
