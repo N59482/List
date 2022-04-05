@@ -81,7 +81,7 @@ void List<T>::push_front(T data)
 	    Size++;
 	};
 
-template<typename T> // протестировать!
+template<typename T> 
 T& List<T>::operator [] (const int index)
 	{
 		cout<<"operator []\n";
@@ -95,14 +95,14 @@ T& List<T>::operator [] (const int index)
 		throw OoR(); 
 	};
 
-template<typename T>
+template<typename T> // протестировать
 void List<T>::pop_back()
 	{
 		cout<<"pop_back\n";
 	    removeAt(Size-1);
 	};
 
-template<typename T>
+template<typename T> // протестировать
 void List<T>::pop_front()
 	{
 		cout<<"pop_front\n";
@@ -125,7 +125,7 @@ void List<T>::clear()
 	    };
 	};
 	
-template<typename T>
+template<typename T> // протестировать
 void List<T>::insert(T value,int index)
 	{
 		cout<<"insert\n";
@@ -144,7 +144,7 @@ void List<T>::insert(T value,int index)
 	    };
 	};
 
-template<typename T> 
+template<typename T>  // протестировать
 void List<T>::removeAt(int index)//5
 	{
 		cout<<"removeAt\n";
@@ -180,7 +180,7 @@ void printline()
 	    cout<<"---------------------------------------------------------------------------------------\n";
 	};
 
-template<typename T>
+template<typename T> // протестировать
 void Status(List<T> & tos)
 	{
 	    cout<<"Теперь в списке "<<tos.getSize() <<(((tos.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
@@ -200,5 +200,13 @@ int main()
 		list.push_back(4);
 		list.push_back(5);
 		list.show();
+
+		cout<<list[1]<<endl;
+		cout<<list[0]<<endl;
+		cout<<list[5]<<endl;
+		cout<<list[112]<<endl;
+		cout<<list[-11]<<endl;
+		cout<<list[4]<<endl;
+		cout<<list[6]<<endl;
 		return 0;
 	}
