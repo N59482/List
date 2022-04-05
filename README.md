@@ -5,7 +5,7 @@
 - void clear(); ✅
 - void pop_front(); ✅
 - void push_front(T data); ✅
-- void insert(T value, int index);
+- void insert(T value, int index); ✅
 - void removeAt(int index);
 
 
