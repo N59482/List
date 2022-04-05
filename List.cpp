@@ -14,7 +14,7 @@ class List
 		void pop_back();
 		void pop_front();
 		void insert(const T & value,const int index);
-		void removeAt(int index);
+		void removeAt(const int & index);
 		void clear();
 		void show();
 		void index_show(List<T> & p_list);// пример использования перегруженного оператора методами класса.
@@ -126,7 +126,7 @@ void List<T>::clear()
 	    };
 	};
 	
-template<typename T> // протестировать
+template<typename T> 
 void List<T>::insert(const T & value,const int index)
 	{
 		cout<<"insert\n";
@@ -138,27 +138,18 @@ void List<T>::insert(const T & value,const int index)
 	    Size++;
 	};
 
-template<typename T>  // протестировать
-void List<T>::removeAt(int index)//5
+template<typename T> 
+void List<T>::removeAt(const int & index)
 	{
 		cout<<"removeAt\n";
-	    if (index == 0) pop_front();
-	    else if (index >= getSize()) cout<<"Выход за границы массива\n";
-	    else 
-	    {
-	        element<T> *temp = head;
-	        for(int i=0; i<index-1; i++)//идем предшествующий элемент;
-	        {
-	           // cout<<i<<" "<<temp->data<<"|";
-	            temp = temp->pNext;
-	        };
-	        //cout<<endl;
-	        element<T> *btd = temp->pNext; //удаляемый элементт;
-	        temp->pNext = btd->pNext;
-	        delete btd;
-	        
-	        Size--;
-	    };
+	    if((index < 0) || (index >= getSize())) throw OoR();
+	    element<T> *temp = head;
+	    for(int i = 0; i < index; i++)
+	    	temp = temp->pNext;
+	    element<T> *delete_me = temp->pNext;
+	    temp->pNext = delete_me->pNext;
+	    delete delete_me;
+	    Size--;
 	};
 
 template<typename T> 
@@ -195,6 +186,5 @@ void Status(List<T> & tos)
 
 int main()
 	{
-
 		return 0;
 	}
