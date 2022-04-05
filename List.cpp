@@ -13,10 +13,11 @@ class List
 		void push_front(T data);
 		void pop_back();
 		void pop_front();
-		void insert(T value, int index);
+		void insert(const T & value,const int index);
 		void removeAt(int index);
 		void clear();
 		void show();
+		void index_show(List<T> & p_list);// пример использования перегруженного оператора методами класса.
 		int getSize(){return Size;}
 		struct OoR : exception
 			{
@@ -126,22 +127,15 @@ void List<T>::clear()
 	};
 	
 template<typename T> // протестировать
-void List<T>::insert(T value,int index)
+void List<T>::insert(const T & value,const int index)
 	{
 		cout<<"insert\n";
-	    if (index == getSize()) push_back(value); //уточнить насколько целесообразны дополнительные проверки экстремумов(делает ли это код эфективнее?)
-	    else if (index == 0) push_front(value); //уточнить насколько целесообразны дополнительные проверки экстремумов(делает ли это код эфективнее?)
-	    else if (index > getSize()) throw OoR();
-	    else
-	    {
-	        element<T> *temp = head;
-	        for(int i=0; i<(index-1); i++)//ищем предшествующий элемент;
-	        {
-	            temp = temp->pNext;
-	        };
-	        temp->pNext = new element<T>(value,temp->pNext);
-	        Size++;
-	    };
+	    if((index > getSize()) || (index < 0)) throw OoR();
+	    element<T> *prev = head;
+	    for(int i = 0; i < index; i++)
+	    	prev = prev->pNext;
+	    prev->pNext = new element<T>(value,prev->pNext);
+	    Size++;
 	};
 
 template<typename T>  // протестировать
@@ -174,6 +168,14 @@ void List<T>::show()
 	        cout<<temp->pNext->data<<"->";
 	    cout<<endl;
 	};
+	
+template<typename T> 
+void List<T>::index_show(List<T> & p_list)
+	{   
+	    for(int i = 0; i < p_list.getSize(); i++)
+	        cout<<p_list[i]<<"->";
+	    cout<<endl;
+	};	
 
 void printline()
 	{
@@ -193,20 +195,6 @@ void Status(List<T> & tos)
 
 int main()
 	{
-		List<int> list;
-		list.push_back(1);
-		list.push_back(2);
-		list.push_back(3);
-		list.push_back(4);
-		list.push_back(5);
-		list.show();
 
-		cout<<list[1]<<endl;
-		cout<<list[0]<<endl;
-		cout<<list[5]<<endl;
-		cout<<list[112]<<endl;
-		cout<<list[-11]<<endl;
-		cout<<list[4]<<endl;
-		cout<<list[6]<<endl;
 		return 0;
 	}
