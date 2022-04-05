@@ -9,8 +9,8 @@ class List
 		List();
 		~List();
 		T& operator [] (const int index);
-		void push_back(T data);
-		void push_front(T data);
+		void push_back(const T& data);
+		void push_front(const T& data);
 		void pop_back();
 		void pop_front();
 		void insert(const T & value,const int index);
@@ -52,7 +52,7 @@ List<T>::List()
 	{
 		cout<<"Constructor\n";
 		Size = 0;
-		head = new element<T>(0,nullptr);
+		head = new element<T>();
 	};
 
 template<typename T>
@@ -64,9 +64,9 @@ List<T>::~List() // разобраться как работет, не оста�
 	};
 
 template<typename T> 
-void List<T>::push_back(T data)
+void List<T>::push_back(const T & data)
 	{
-		cout<<"push_back\n";
+		// cout<<"push_back\n";
 		element<T> *temp = head;//нужно ли писать this->head?
 		while(temp->pNext != nullptr)
 		    temp = temp->pNext;
@@ -75,9 +75,9 @@ void List<T>::push_back(T data)
 	};
 
 template<typename T>
-void List<T>::push_front(T data)
+void List<T>::push_front(const T& data)
 	{
-		cout<<"push_front\n";
+		// cout<<"push_front\n";
 	    head->pNext = new element<T> (data, head->pNext);
 	    Size++;
 	};
@@ -85,7 +85,7 @@ void List<T>::push_front(T data)
 template<typename T> 
 T& List<T>::operator [] (const int index)
 	{
-		cout<<"operator []\n";
+		// cout<<"operator []\n";
 		if(index >= Size) throw OoR(); 
 		element<T> *temp = head->pNext;
 		for(int i = 0; i < Size; i++)
@@ -99,14 +99,14 @@ T& List<T>::operator [] (const int index)
 template<typename T> // протестировать
 void List<T>::pop_back()
 	{
-		cout<<"pop_back\n";
+		// cout<<"pop_back\n";
 	    removeAt(Size-1);
 	};
 
 template<typename T> // протестировать
 void List<T>::pop_front()
 	{
-		cout<<"pop_front\n";
+		// cout<<"pop_front\n";
 		if(head->pNext != nullptr)
 			{
 				element<T> *temp = head->pNext; 
@@ -119,7 +119,7 @@ void List<T>::pop_front()
 template<typename T>
 void List<T>::clear()
 	{
-		cout<<"clear\n";
+		// cout<<"clear\n";
 	    while(Size)
 	    {
 	      pop_front();  
@@ -129,7 +129,7 @@ void List<T>::clear()
 template<typename T> 
 void List<T>::insert(const T & value,const int index)
 	{
-		cout<<"insert\n";
+		// cout<<"insert\n";
 	    if((index > getSize()) || (index < 0)) throw OoR();
 	    element<T> *prev = head;
 	    for(int i = 0; i < index; i++)
@@ -141,7 +141,7 @@ void List<T>::insert(const T & value,const int index)
 template<typename T> 
 void List<T>::removeAt(const int & index)
 	{
-		cout<<"removeAt\n";
+		// cout<<"removeAt\n";
 	    if((index < 0) || (index >= getSize())) throw OoR();
 	    element<T> *temp = head;
 	    for(int i = 0; i < index; i++)
@@ -168,17 +168,11 @@ void List<T>::index_show(List<T> & p_list)
 	    cout<<endl;
 	};	
 
-void printline()
-	{
-	    cout<<"---------------------------------------------------------------------------------------\n";
-	};
-
-template<typename T> // протестировать
+template<typename T> 
 void Status(List<T> & tos)
 	{
-	    cout<<"Теперь в списке "<<tos.getSize() <<(((tos.getSize()%10)<5)?" элемента.":" элементов.")<< endl; //выводим количество элементов
-
-		for(int i=0;i<tos.getSize();i++) // выводим список
+	    cout<<"Теперь в списке "<<tos.getSize() <<(((tos.getSize()%10)<5)?" элемента.":" элементов.")<< endl;
+		for(int i=0;i<tos.getSize();i++)
 		{
 		    cout<<tos[i]<<((i==(tos.getSize()-1))?".\n":"->");
 		};
@@ -186,5 +180,33 @@ void Status(List<T> & tos)
 
 int main()
 	{
+		// List<int> l;
+		// Status(l);
+		
+		// l.push_back(3);
+		// Status(l);
+        
+  		// l.push_back(4);
+		// Status(l);
+		
+		// int x = 2;
+		// l.push_front(x);
+		// Status(l);
+
+		// l.push_front(l[1] - l[0]);
+		// Status(l);
+
+		// l.pop_back();
+		// Status(l);
+
+		// l.pop_front();
+		// Status(l);
+
+		// l.insert(4,1);
+		// Status(l);
+
+		// l.removeAt(0);
+		// Status(l);
+
 		return 0;
 	}

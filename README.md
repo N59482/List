@@ -6,8 +6,9 @@
 - void pop_front(); ✅
 - void push_front(T data); ✅
 - void insert(T value, int index); ✅
-- void removeAt(int index);
+- void removeAt(int index); ✅
 
+Проверить логику инкапсуляции ✅
 
-Проверить логику инкапсуляции
-
+Перепроверить логику деструктора
+ 
